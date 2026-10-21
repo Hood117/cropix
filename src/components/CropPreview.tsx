@@ -60,11 +60,11 @@ export function CropPreview({
   }, []);
 
   return (
-    <div className="flex items-center gap-3" aria-live="polite">
-      <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+    <div className="space-y-1.5" aria-live="polite">
+      <span className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">
         Preview
       </span>
-      <div className="flex h-14 w-[4.75rem] items-center justify-center overflow-hidden rounded-md border border-border bg-muted/60">
+      <div className="flex h-24 w-full items-center justify-center overflow-hidden rounded-md border border-border bg-muted/60">
         {previewUrl ? (
           <img
             src={previewUrl}

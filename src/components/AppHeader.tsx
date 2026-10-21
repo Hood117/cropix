@@ -1,35 +1,18 @@
-import { FolderOpen, RotateCcw, Download, X } from "lucide-react";
+import { FolderOpen, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import type { ExportFormat } from "@/lib/file";
 
 type AppHeaderProps = {
   hasImage: boolean;
   busy: boolean;
-  format: ExportFormat;
-  onFormatChange: (format: ExportFormat) => void;
   onOpen: () => void;
-  onReset: () => void;
   onCancel: () => void;
-  onExport: () => void;
 };
 
 export function AppHeader({
   hasImage,
   busy,
-  format,
-  onFormatChange,
   onOpen,
-  onReset,
   onCancel,
-  onExport,
 }: AppHeaderProps) {
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border/80 px-5 sm:px-6">
@@ -88,48 +71,12 @@ export function AppHeader({
           <Button
             variant="ghost"
             size="sm"
-            onClick={onReset}
-            disabled={busy}
-            aria-label="Reset crop selection"
-          >
-            <RotateCcw />
-            <span className="hidden sm:inline">Reset</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
             onClick={onCancel}
             disabled={busy}
             aria-label="Cancel editing and clear image"
           >
             <X />
-            <span className="hidden sm:inline">Cancel</span>
-          </Button>
-
-          <Separator orientation="vertical" className="mx-1 hidden h-6 sm:block" />
-
-          <Select
-            value={format}
-            onValueChange={(value) => onFormatChange(value as ExportFormat)}
-            disabled={busy}
-          >
-            <SelectTrigger aria-label="Export format">
-              <SelectValue placeholder="Format" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="png">PNG</SelectItem>
-              <SelectItem value="jpeg">JPEG</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button
-            size="sm"
-            onClick={onExport}
-            disabled={busy}
-            aria-label="Export cropped image"
-          >
-            <Download />
-            Export
+            Cancel
           </Button>
         </div>
       )}

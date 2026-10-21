@@ -43,19 +43,34 @@
     outline-offset: 2px;
   }
 
-  /* react-image-crop — match Cropix accent */
+  /* react-image-crop — Cropix crop chrome */
   .ReactCrop {
     max-width: 100%;
   }
 
   .ReactCrop__crop-selection {
-    border: 1px solid rgb(45 212 191 / 0.9);
+    border: 1.5px solid rgb(232 234 237 / 0.95);
+    box-shadow: 0 0 0 9999em rgb(0 0 0 / 0.45);
+  }
+
+  .ReactCrop__drag-handle {
+    width: 14px;
+    height: 14px;
   }
 
   .ReactCrop__drag-handle::after {
-    background-color: #2dd4bf;
-    border-color: #0f1115;
-    width: 8px;
-    height: 8px;
+    background-color: #f8fafc;
+    border: 2px solid #2dd4bf;
+    border-radius: 999px;
+    width: 11px;
+    height: 11px;
+    outline: none;
+  }
+
+  .ReactCrop__rule-of-thirds-hz::before,
+  .ReactCrop__rule-of-thirds-hz::after,
+  .ReactCrop__rule-of-thirds-vt::before,
+  .ReactCrop__rule-of-thirds-vt::after {
+    background-color: rgb(255 255 255 / 0.45);
   }
 }

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { CropCanvas } from "@/components/CropCanvas";
-import { CropPreview } from "@/components/CropPreview";
+import { CropPanel } from "@/components/CropPanel";
 import { DropZone } from "@/components/DropZone";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { useCropSession } from "@/hooks/useCropSession";
@@ -46,21 +46,17 @@ function App() {
       <AppHeader
         hasImage={session.hasImage}
         busy={session.busy}
-        format={session.format}
-        onFormatChange={session.setFormat}
         onOpen={() => {
           setImageElement(null);
           void session.openImage();
         }}
-        onReset={session.resetCrop}
         onCancel={() => {
           setImageElement(null);
           session.cancelImage();
         }}
-        onExport={session.exportImage}
       />
 
-      <main className="relative flex min-h-0 flex-1 flex-col gap-3 p-4 sm:p-5">
+      <main className="relative flex min-h-0 flex-1 flex-col">
         {isDragging && (
           <div
             className="pointer-events-none absolute inset-3 z-20 rounded-xl border-2 border-dashed border-accent/70 bg-accent/5 sm:inset-4"
@@ -68,64 +64,96 @@ function App() {
           />
         )}
 
-        <div className="min-h-0 flex-1">
-          {session.imageUrl ? (
-            <CropCanvas
-              imageUrl={session.imageUrl}
-              crop={session.crop}
-              cropKey={session.cropKey}
-              onCropChange={session.setCrop}
-              onPixelCropChange={session.setPixelCrop}
-              onImageReady={onImageReady}
-            />
-          ) : (
+        {!session.hasImage ? (
+          <div className="flex min-h-0 flex-1 p-4 sm:p-5">
             <DropZone
               onOpen={session.openImage}
               disabled={session.busy}
               isDragging={isDragging}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+            <CropPanel
+              naturalCrop={session.naturalCrop}
+              imageNaturalSize={session.imageNaturalSize}
+              aspect={session.aspect}
+              format={session.format}
+              busy={session.busy}
+              imageElement={imageElement}
+              pixelCrop={session.pixelCrop}
+              onAspectChange={session.changeAspect}
+              onNaturalCropChange={session.updateNaturalCrop}
+              onFormatChange={session.setFormat}
+              onReset={session.resetCrop}
+              onExport={session.exportImage}
+            />
 
-        {(session.hasImage || session.error || session.status || session.busy) && (
-          <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border/80 pt-3">
-            {session.hasImage ? (
-              <CropPreview
-                imageElement={imageElement}
-                pixelCrop={session.pixelCrop}
-                format={session.format}
-              />
-            ) : (
-              <div />
-            )}
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 p-4 sm:p-5">
+              <div className="min-h-0 flex-1">
+                <CropCanvas
+                  imageUrl={session.imageUrl!}
+                  crop={session.crop}
+                  cropKey={session.cropKey}
+                  aspect={session.aspectRatio}
+                  onCropChange={session.setCrop}
+                  onPixelCropChange={session.setPixelCrop}
+                  onImageReady={onImageReady}
+                />
+              </div>
 
-            <div className="flex min-w-0 flex-1 flex-col items-stretch gap-2 sm:max-w-md sm:items-end">
-              <ErrorBanner
-                message={session.error}
-                onDismiss={session.clearError}
-              />
-              {(session.busy || session.status) && !session.error && (
-                <p
-                  className="flex items-center justify-end gap-2 text-xs text-muted-foreground"
-                  role="status"
-                  aria-live="polite"
-                >
-                  {session.busy && (
-                    <LoaderCircle
-                      className="size-3.5 animate-spin text-accent"
-                      aria-hidden
-                    />
+              <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-muted-foreground">
+                  Drag handles to resize · drag inside to move
+                </p>
+                <div className="min-w-0 flex-1 sm:max-w-md sm:flex-none">
+                  <ErrorBanner
+                    message={session.error}
+                    onDismiss={session.clearError}
+                  />
+                  {(session.busy || session.status) && !session.error && (
+                    <p
+                      className="flex items-center justify-end gap-2 text-xs text-muted-foreground"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      {session.busy && (
+                        <LoaderCircle
+                          className="size-3.5 animate-spin text-accent"
+                          aria-hidden
+                        />
+                      )}
+                      {session.status ?? "Working…"}
+                    </p>
                   )}
-                  {session.status ?? "Working…"}
-                </p>
-              )}
-              {session.hasImage && !session.error && !session.busy && !session.status && (
-                <p className="text-right text-xs text-muted-foreground">
-                  Drag edges or corners to crop
-                </p>
-              )}
+                </div>
+              </div>
             </div>
-          </footer>
+          </div>
+        )}
+
+        {!session.hasImage && (session.error || session.status || session.busy) && (
+          <div className="border-t border-border/80 px-4 py-3 sm:px-5">
+            <ErrorBanner
+              message={session.error}
+              onDismiss={session.clearError}
+            />
+            {(session.busy || session.status) && !session.error && (
+              <p
+                className="flex items-center gap-2 text-xs text-muted-foreground"
+                role="status"
+                aria-live="polite"
+              >
+                {session.busy && (
+                  <LoaderCircle
+                    className="size-3.5 animate-spin text-accent"
+                    aria-hidden
+                  />
+                )}
+                {session.status ?? "Working…"}
+              </p>
+            )}
+          </div>
         )}
       </main>
     </div>

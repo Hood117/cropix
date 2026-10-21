@@ -1,6 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Crop, PixelCrop } from "react-image-crop";
-import { getCroppedImg } from "@/lib/cropImage";
+import { aspectValue, type AspectPreset } from "@/lib/aspect";
+import {
+  applyPercentCrop,
+  centerAspectPercentCrop,
+  clampNaturalCrop,
+  getCroppedImg,
+  naturalToPercentCrop,
+  toNaturalCrop,
+  type NaturalCrop,
+} from "@/lib/cropImage";
 import {
   ACCEPTED_IMAGE_LABEL,
   isImageFile,
@@ -14,11 +23,13 @@ export function useCropSession() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [crop, setCrop] = useState<Crop | undefined>(undefined);
   const [pixelCrop, setPixelCrop] = useState<PixelCrop | null>(null);
+  const [aspect, setAspect] = useState<AspectPreset>("free");
   const [format, setFormat] = useState<ExportFormat>("png");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [cropKey, setCropKey] = useState(0);
+  const [imageVersion, setImageVersion] = useState(0);
   const imageUrlRef = useRef<string | null>(null);
   const imageElementRef = useRef<HTMLImageElement | null>(null);
 
@@ -31,7 +42,9 @@ export function useCropSession() {
     setImageUrl(url);
     setCrop(undefined);
     setPixelCrop(null);
+    setAspect("free");
     setCropKey((k) => k + 1);
+    setImageVersion((v) => v + 1);
     setError(null);
     setStatus(null);
   }, []);
@@ -128,14 +141,65 @@ export function useCropSession() {
     setImageUrl(null);
     setCrop(undefined);
     setPixelCrop(null);
+    setAspect("free");
     setCropKey((k) => k + 1);
+    setImageVersion((v) => v + 1);
     clearError();
     setStatus(null);
   }, [clearError, imageUrl]);
 
   const onImageReady = useCallback((image: HTMLImageElement) => {
     imageElementRef.current = image;
+    setImageVersion((v) => v + 1);
   }, []);
+
+  const changeAspect = useCallback((next: AspectPreset) => {
+    setAspect(next);
+    const image = imageElementRef.current;
+    const ratio = aspectValue(next);
+    // Freeform keeps the current selection; locked ratios recenter to fit.
+    if (!image || !ratio) {
+      return;
+    }
+    const centered = centerAspectPercentCrop(image.width, image.height, ratio);
+    const applied = applyPercentCrop(centered, image);
+    setCrop(applied.crop);
+    setPixelCrop(applied.pixelCrop);
+  }, []);
+
+  const updateNaturalCrop = useCallback((patch: Partial<NaturalCrop>) => {
+    const image = imageElementRef.current;
+    if (!image || !pixelCrop) {
+      return;
+    }
+
+    const current = toNaturalCrop(pixelCrop, image);
+    let next = clampNaturalCrop({ ...current, ...patch }, image);
+    const ratio = aspectValue(aspect);
+
+    if (ratio && patch.width !== undefined && patch.height === undefined) {
+      next = clampNaturalCrop(
+        {
+          ...next,
+          height: Math.max(1, Math.round(next.width / ratio)),
+        },
+        image,
+      );
+    } else if (ratio && patch.height !== undefined && patch.width === undefined) {
+      next = clampNaturalCrop(
+        {
+          ...next,
+          width: Math.max(1, Math.round(next.height * ratio)),
+        },
+        image,
+      );
+    }
+
+    const percent = naturalToPercentCrop(next, image);
+    const applied = applyPercentCrop(percent, image);
+    setCrop(applied.crop);
+    setPixelCrop(applied.pixelCrop);
+  }, [aspect, pixelCrop]);
 
   const exportImage = useCallback(async () => {
     const image = imageElementRef.current;
@@ -167,6 +231,28 @@ export function useCropSession() {
     }
   }, [clearError, format, pixelCrop]);
 
+  const naturalCrop = useMemo(() => {
+    const image = imageElementRef.current;
+    if (!image || !pixelCrop) {
+      return null;
+    }
+    return toNaturalCrop(pixelCrop, image);
+    // imageVersion forces recompute when the displayed image element is ready
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pixelCrop, imageVersion]);
+
+  const imageNaturalSize = useMemo(() => {
+    const image = imageElementRef.current;
+    if (!image) {
+      return null;
+    }
+    return {
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageVersion]);
+
   useEffect(() => {
     return () => {
       revokeObjectUrl(imageUrlRef.current);
@@ -179,6 +265,12 @@ export function useCropSession() {
     setCrop,
     pixelCrop,
     setPixelCrop,
+    aspect,
+    aspectRatio: aspectValue(aspect),
+    changeAspect,
+    updateNaturalCrop,
+    naturalCrop,
+    imageNaturalSize,
     format,
     setFormat,
     error,

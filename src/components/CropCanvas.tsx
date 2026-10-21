@@ -5,12 +5,16 @@ import ReactCrop, {
   type PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { initialPercentCrop } from "@/lib/cropImage";
+import {
+  centerAspectPercentCrop,
+  initialPercentCrop,
+} from "@/lib/cropImage";
 
 type CropCanvasProps = {
   imageUrl: string;
   crop: Crop | undefined;
   cropKey: number;
+  aspect?: number;
   onCropChange: (crop: Crop) => void;
   onPixelCropChange: (pixelCrop: PixelCrop) => void;
   onImageReady: (image: HTMLImageElement) => void;
@@ -20,6 +24,7 @@ export function CropCanvas({
   imageUrl,
   crop,
   cropKey,
+  aspect,
   onCropChange,
   onPixelCropChange,
   onImageReady,
@@ -31,7 +36,9 @@ export function CropCanvas({
     imgRef.current = image;
     onImageReady(image);
 
-    const next = initialPercentCrop();
+    const next = aspect
+      ? centerAspectPercentCrop(image.width, image.height, aspect)
+      : initialPercentCrop();
     onCropChange(next);
     onPixelCropChange(convertToPixelCrop(next, image.width, image.height));
   };
@@ -45,6 +52,8 @@ export function CropCanvas({
       <ReactCrop
         key={cropKey}
         crop={crop}
+        aspect={aspect}
+        ruleOfThirds
         onChange={(next) => onCropChange(next)}
         onComplete={(pixelCrop) => onPixelCropChange(pixelCrop)}
         keepSelection
@@ -55,7 +64,7 @@ export function CropCanvas({
           src={imageUrl}
           alt="Image ready for cropping"
           onLoad={onImageLoad}
-          className="max-h-[calc(100vh-12rem)] max-w-full object-contain"
+          className="max-h-[calc(100vh-10rem)] max-w-full object-contain"
           draggable={false}
         />
       </ReactCrop>
