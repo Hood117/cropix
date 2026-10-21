@@ -1,5 +1,6 @@
 import { FolderOpen, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type AppHeaderProps = {
   hasImage: boolean;
@@ -15,10 +16,17 @@ export function AppHeader({
   onCancel,
 }: AppHeaderProps) {
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border/80 px-5 sm:px-6">
+    <header
+      className={cn(
+        "flex h-14 shrink-0 items-center gap-3 px-5 sm:px-6",
+        hasImage
+          ? "border-b border-border/80"
+          : "absolute inset-x-0 top-0 z-30 border-b border-transparent bg-gradient-to-b from-background/80 to-transparent",
+      )}
+    >
       <div className="flex min-w-0 items-center gap-2.5">
         <div
-          className="flex size-7 items-center justify-center rounded-md border border-border bg-card"
+          className="flex size-7 items-center justify-center rounded-md border border-border bg-card/80 backdrop-blur-sm"
           aria-hidden
         >
           <svg viewBox="0 0 24 24" className="size-4" fill="none">
@@ -44,16 +52,9 @@ export function AppHeader({
             />
           </svg>
         </div>
-        <div className="min-w-0">
-          <h1 className="text-[1.05rem] font-semibold tracking-tight text-foreground">
-            Cropix
-          </h1>
-          {!hasImage && (
-            <p className="hidden text-[11px] text-muted-foreground sm:block">
-              Local image crop
-            </p>
-          )}
-        </div>
+        <h1 className="text-[1.05rem] font-semibold tracking-tight text-foreground">
+          Cropix
+        </h1>
       </div>
 
       {hasImage && (

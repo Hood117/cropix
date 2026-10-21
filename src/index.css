@@ -73,4 +73,59 @@
   .ReactCrop__rule-of-thirds-vt::after {
     background-color: rgb(255 255 255 / 0.45);
   }
+
+  /* Welcome hero motion */
+  @keyframes cropix-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes cropix-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .cropix-fade-up {
+    animation: cropix-fade-up 0.7s ease-out both;
+  }
+
+  .cropix-fade-up--delay-1 {
+    animation-delay: 0.08s;
+  }
+
+  .cropix-fade-up--delay-2 {
+    animation-delay: 0.16s;
+  }
+
+  .cropix-fade-up--delay-3 {
+    animation-delay: 0.24s;
+  }
+
+  .cropix-frame--back {
+    animation: cropix-float 7s ease-in-out infinite;
+  }
+
+  .cropix-frame--front {
+    animation: cropix-float 7s ease-in-out infinite;
+    animation-delay: -3.5s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cropix-fade-up,
+    .cropix-frame--back,
+    .cropix-frame--front {
+      animation: none;
+    }
+  }
 }

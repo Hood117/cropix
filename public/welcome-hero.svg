@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#12151c"/>
+      <stop offset="55%" stop-color="#0f1115"/>
+      <stop offset="100%" stop-color="#0c1014"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="58%" cy="38%" r="45%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#2dd4bf" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ridge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c222c"/>
+      <stop offset="100%" stop-color="#141820"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#152028"/>
+      <stop offset="100%" stop-color="#0e1218"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+
+  <!-- cool ridgeline -->
+  <path d="M0 520 C160 470 300 560 460 500 C620 440 740 540 920 490 C1100 440 1280 530 1600 470 L1600 620 L0 620 Z" fill="url(#ridge)"/>
+  <path d="M0 560 C240 530 420 600 640 560 C860 520 1040 600 1280 555 C1440 525 1520 570 1600 545 L1600 660 L0 660 Z" fill="#161b24"/>
+
+  <!-- reflective plane -->
+  <rect y="600" width="1600" height="400" fill="url(#water)"/>
+  <rect y="600" width="1600" height="48" fill="url(#sheen)"/>
+  <path d="M120 720 C380 708 620 736 900 718" stroke="#2dd4bf" stroke-width="1.5" fill="none" opacity="0.12"/>
+  <path d="M400 800 C680 788 980 816 1320 796" stroke="#94a3b8" stroke-width="1.25" fill="none" opacity="0.08"/>
+
+  <!-- subtle subject block -->
+  <g transform="translate(690 610)" opacity="0.9">
+    <ellipse cx="90" cy="42" rx="100" ry="12" fill="#0a0c10" opacity="0.5"/>
+    <path d="M20 28 C48 12 132 12 160 28 L148 40 C120 48 60 48 32 40 Z" fill="#1a242c"/>
+    <path d="M34 24 C58 16 122 16 146 24 L142 30 C118 22 66 22 38 30 Z" fill="#2dd4bf" opacity="0.35"/>
+    <rect x="86" y="-2" width="3" height="32" rx="1" fill="#2dd4bf" opacity="0.55"/>
+  </g>
+</svg>
