@@ -77,12 +77,14 @@ function App() {
               imageNaturalSize={session.imageNaturalSize}
               aspect={session.aspect}
               format={session.format}
+              quality={session.quality}
               busy={session.busy}
               imageElement={imageElement}
               pixelCrop={session.pixelCrop}
               onAspectChange={session.changeAspect}
               onNaturalCropChange={session.updateNaturalCrop}
               onFormatChange={session.setFormat}
+              onQualityChange={session.setQuality}
               onReset={session.resetCrop}
               onExport={session.exportImage}
             />

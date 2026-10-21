@@ -8,12 +8,14 @@ type CropPreviewProps = {
   imageElement: HTMLImageElement | null;
   pixelCrop: PixelCrop | null;
   format: ExportFormat;
+  quality?: number;
 };
 
 export function CropPreview({
   imageElement,
   pixelCrop,
   format,
+  quality = 92,
 }: CropPreviewProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
@@ -30,7 +32,13 @@ export function CropPreview({
       }
 
       try {
-        const blob = await getCroppedImg(imageElement, pixelCrop, format, 0.85);
+        const encodeQuality = Math.min(1, Math.max(0.01, quality / 100));
+        const blob = await getCroppedImg(
+          imageElement,
+          pixelCrop,
+          format,
+          encodeQuality,
+        );
         if (cancelled) {
           return;
         }
@@ -51,7 +59,7 @@ export function CropPreview({
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [format, imageElement, pixelCrop]);
+  }, [format, imageElement, pixelCrop, quality]);
 
   useEffect(() => {
     return () => {
@@ -64,7 +72,7 @@ export function CropPreview({
       <span className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">
         Preview
       </span>
-      <div className="flex h-24 w-full items-center justify-center overflow-hidden rounded-md border border-border bg-muted/60">
+      <div className="flex h-16 w-full items-center justify-center overflow-hidden rounded-md border border-border bg-muted/60">
         {previewUrl ? (
           <img
             src={previewUrl}

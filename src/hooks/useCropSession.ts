@@ -25,6 +25,7 @@ export function useCropSession() {
   const [pixelCrop, setPixelCrop] = useState<PixelCrop | null>(null);
   const [aspect, setAspect] = useState<AspectPreset>("free");
   const [format, setFormat] = useState<ExportFormat>("png");
+  const [quality, setQuality] = useState(92);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -211,7 +212,8 @@ export function useCropSession() {
     clearError();
     setStatus("Exporting…");
     try {
-      const blob = await getCroppedImg(image, pixelCrop, format);
+      const encodeQuality = Math.min(1, Math.max(0.01, quality / 100));
+      const blob = await getCroppedImg(image, pixelCrop, format, encodeQuality);
       const saved = await saveImageBlob(blob, format);
       if (!saved) {
         setStatus(null);
@@ -229,7 +231,7 @@ export function useCropSession() {
     } finally {
       setBusy(false);
     }
-  }, [clearError, format, pixelCrop]);
+  }, [clearError, format, pixelCrop, quality]);
 
   const naturalCrop = useMemo(() => {
     const image = imageElementRef.current;
@@ -273,6 +275,8 @@ export function useCropSession() {
     imageNaturalSize,
     format,
     setFormat,
+    quality,
+    setQuality,
     error,
     clearError,
     busy,
