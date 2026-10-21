@@ -14,13 +14,13 @@ export function ErrorBanner({ message, onDismiss }: ErrorBannerProps) {
   return (
     <div
       role="alert"
-      className="flex items-center gap-3 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+      className="flex items-start gap-3 rounded-md border border-destructive/35 bg-destructive/10 px-3 py-2 text-sm text-destructive"
     >
-      <p className="flex-1">{message}</p>
+      <p className="flex-1 pt-0.5 leading-snug">{message}</p>
       <Button
         variant="ghost"
         size="icon"
-        className="size-7 text-destructive hover:bg-destructive/15 hover:text-destructive"
+        className="size-7 shrink-0 text-destructive hover:bg-destructive/15 hover:text-destructive"
         onClick={onDismiss}
         aria-label="Dismiss error"
       >

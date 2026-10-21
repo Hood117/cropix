@@ -33,13 +33,15 @@ export function CropCanvas({
 
     const next = initialPercentCrop();
     onCropChange(next);
-    onPixelCropChange(
-      convertToPixelCrop(next, image.width, image.height),
-    );
+    onPixelCropChange(convertToPixelCrop(next, image.width, image.height));
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center overflow-auto rounded-lg border border-border bg-[#0a0c10] p-3">
+    <div
+      className="flex h-full w-full items-center justify-center overflow-auto rounded-xl border border-border/80 bg-[#0a0c10] p-3 sm:p-4"
+      role="region"
+      aria-label="Crop workspace"
+    >
       <ReactCrop
         key={cropKey}
         crop={crop}
@@ -51,9 +53,9 @@ export function CropCanvas({
         <img
           key={cropKey}
           src={imageUrl}
-          alt="Image to crop"
+          alt="Image ready for cropping"
           onLoad={onImageLoad}
-          className="max-h-[calc(100vh-11rem)] max-w-full object-contain"
+          className="max-h-[calc(100vh-12rem)] max-w-full object-contain"
           draggable={false}
         />
       </ReactCrop>

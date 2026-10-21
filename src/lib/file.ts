@@ -9,10 +9,20 @@ const IMAGE_EXTENSIONS = new Set([
   "bmp",
 ]);
 
-const IMAGE_MIME_PREFIX = "image/";
+const IMAGE_MIMES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/gif",
+  "image/bmp",
+  "image/x-ms-bmp",
+]);
+
+export const ACCEPTED_IMAGE_LABEL = "PNG, JPEG, WebP, GIF, or BMP";
 
 export function isImageFile(file: File): boolean {
-  if (file.type.startsWith(IMAGE_MIME_PREFIX)) {
+  if (file.type && IMAGE_MIMES.has(file.type.toLowerCase())) {
     return true;
   }
   const ext = file.name.split(".").pop()?.toLowerCase();
@@ -20,7 +30,9 @@ export function isImageFile(file: File): boolean {
 }
 
 export function isImagePath(path: string): boolean {
-  const ext = path.split(".").pop()?.toLowerCase();
+  const normalized = path.replace(/\\/g, "/");
+  const name = normalized.split("/").pop() ?? normalized;
+  const ext = name.split(".").pop()?.toLowerCase();
   return ext !== undefined && IMAGE_EXTENSIONS.has(ext);
 }
 
@@ -54,7 +66,9 @@ export function revokeObjectUrl(url: string | null): void {
 }
 
 export function guessMimeFromPath(path: string): string {
-  const ext = path.split(".").pop()?.toLowerCase();
+  const normalized = path.replace(/\\/g, "/");
+  const name = normalized.split("/").pop() ?? normalized;
+  const ext = name.split(".").pop()?.toLowerCase();
   switch (ext) {
     case "png":
       return "image/png";

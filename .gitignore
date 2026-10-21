@@ -13,6 +13,10 @@ dist-ssr
 release
 *.local
 
+# Mobile icon sets from `tauri icon` (Windows desktop uses root icons/)
+src-tauri/icons/android/
+src-tauri/icons/ios/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
