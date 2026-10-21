@@ -113,15 +113,11 @@ export function WelcomeHero({ onOpen, disabled, isDragging }: WelcomeHeroProps) 
         </div>
 
         <div className="cropix-fade-up mt-8 max-w-lg text-center">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
-            Cropix
-          </p>
           <h2 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {isDragging ? "Drop to open" : "Drop an image to start"}
           </h2>
           <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
-            Or open one from disk. {ACCEPTED_IMAGE_LABEL}. Local only — nothing
-            leaves your computer.
+            Or click Open image. Works with {ACCEPTED_IMAGE_LABEL}.
           </p>
         </div>
 
