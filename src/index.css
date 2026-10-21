@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/600.css";
+@import "@fontsource/dm-sans/700.css";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-background: #0f1115;
+  --color-foreground: #e8eaed;
+  --color-muted: #1a1d24;
+  --color-muted-foreground: #8b919a;
+  --color-border: rgb(255 255 255 / 0.1);
+  --color-accent: #2dd4bf;
+  --color-accent-foreground: #042f2e;
+  --color-card: #14171e;
+  --color-destructive: #f87171;
+  --color-ring: #2dd4bf;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    margin: 0;
+    overflow: hidden;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(45 212 191 / 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgb(45 212 191 / 0.04), transparent);
+  }
+
+  /* react-image-crop — match Cropix accent */
+  .ReactCrop__crop-selection {
+    border: 1px solid rgb(45 212 191 / 0.85);
+  }
+
+  .ReactCrop__drag-handle::after {
+    background-color: #2dd4bf;
+    border-color: #0f1115;
+  }
+}
