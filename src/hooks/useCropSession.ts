@@ -89,6 +89,20 @@ export function useCropSession() {
     clearError();
   }, [clearError, imageUrl]);
 
+  const cancelImage = useCallback(() => {
+    if (!imageUrlRef.current && !imageUrl) {
+      return;
+    }
+    revokeObjectUrl(imageUrlRef.current);
+    imageUrlRef.current = null;
+    imageElementRef.current = null;
+    setImageUrl(null);
+    setCrop(undefined);
+    setPixelCrop(null);
+    setCropKey((k) => k + 1);
+    clearError();
+  }, [clearError, imageUrl]);
+
   const onImageReady = useCallback((image: HTMLImageElement) => {
     imageElementRef.current = image;
   }, []);
@@ -138,6 +152,7 @@ export function useCropSession() {
     loadFromFile,
     loadFromPath,
     resetCrop,
+    cancelImage,
     onImageReady,
     exportImage,
   };

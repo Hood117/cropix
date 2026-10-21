@@ -1,4 +1,4 @@
-import { FolderOpen, RotateCcw, Download } from "lucide-react";
+import { FolderOpen, RotateCcw, Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -17,6 +17,7 @@ type AppHeaderProps = {
   onFormatChange: (format: ExportFormat) => void;
   onOpen: () => void;
   onReset: () => void;
+  onCancel: () => void;
   onExport: () => void;
 };
 
@@ -27,6 +28,7 @@ export function AppHeader({
   onFormatChange,
   onOpen,
   onReset,
+  onCancel,
   onExport,
 }: AppHeaderProps) {
   return (
@@ -60,6 +62,16 @@ export function AppHeader({
         >
           <RotateCcw />
           Reset
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onCancel}
+          disabled={!hasImage || busy}
+          aria-label="Cancel and clear image"
+        >
+          <X />
+          Cancel
         </Button>
 
         <Separator orientation="vertical" className="mx-1 h-6" />

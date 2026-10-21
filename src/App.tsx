@@ -49,6 +49,10 @@ function App() {
           void session.openImage();
         }}
         onReset={session.resetCrop}
+        onCancel={() => {
+          setImageElement(null);
+          session.cancelImage();
+        }}
         onExport={session.exportImage}
       />
 
